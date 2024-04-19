@@ -1,5 +1,6 @@
 package com.alejogalizzi.teams.model.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -24,11 +25,14 @@ public class Team {
   private Long id;
 
   @NotBlank
+  @Column(nullable = false)
   private String nombre;
 
   @NotBlank
+  @Column(nullable = false)
   private String liga;
 
   @NotBlank
+  @Column(nullable = false)
   private String pais;
 }
