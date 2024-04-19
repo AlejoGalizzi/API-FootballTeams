@@ -1,7 +1,7 @@
 package com.alejogalizzi.teams.service.implementations;
 
 import com.alejogalizzi.teams.exception.InvalidRequestException;
-import com.alejogalizzi.teams.exception.TeamNotFoundException;
+import com.alejogalizzi.teams.exception.NotFoundException;
 import com.alejogalizzi.teams.model.entity.Team;
 import com.alejogalizzi.teams.repository.ITeamRepository;
 import com.alejogalizzi.teams.service.ITeamService;
@@ -24,7 +24,7 @@ public class TeamService implements ITeamService {
   public Team findTeamById(Long id) {
     Team team = teamRepository.findById(id).orElse(null);
     if(team == null) {
-      throw new TeamNotFoundException("Equipo no encontrado");
+      throw new NotFoundException("Equipo no encontrado");
     }
 
     return team;
@@ -34,7 +34,7 @@ public class TeamService implements ITeamService {
   public List<Team> findTeamByName(String name) {
     List<Team> teams = teamRepository.findByNombreContaining(name);
     if(teams.isEmpty()) {
-      throw new TeamNotFoundException("No se encontro ningun equipo que contenga ese nombre");
+      throw new NotFoundException("No se encontro ningun equipo que contenga ese nombre");
     }
 
     return teams;
@@ -57,7 +57,7 @@ public class TeamService implements ITeamService {
   public Team updateTeam(long id, Team team) {
     Team dbTeam = teamRepository.findById(id).orElse(null);
     if(dbTeam == null) {
-      throw new TeamNotFoundException("Equipo no encontrado");
+      throw new NotFoundException("Equipo no encontrado");
     }
     try {
       dbTeam.setNombre(team.getNombre());
@@ -73,7 +73,7 @@ public class TeamService implements ITeamService {
   public void deleteTeam(Long id) {
     Team team = teamRepository.findById(id).orElse(null);
     if(team == null) {
-      throw new TeamNotFoundException("Equipo no encontrado");
+      throw new NotFoundException("Equipo no encontrado");
     }
     teamRepository.delete(team);
   }
