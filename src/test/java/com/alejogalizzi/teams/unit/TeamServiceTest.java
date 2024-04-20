@@ -14,13 +14,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 @SpringBootTest
-public class TeamServiceTest {
+public class TeamServiceTest extends BaseTestClass{
 
   @MockBean
   private ITeamRepository teamRepository;
@@ -28,15 +29,21 @@ public class TeamServiceTest {
   @Autowired
   private ITeamService teamService;
 
-  List<Team> mockTeams = Arrays.asList(
-      new Team(1L, "Team A", "League A", "Country A"),
-      new Team(2L, "Team B", "League B", "Country B")
-  );
+  private List<Team> mockTeams = new ArrayList<>();
 
-  Team newTeam = new Team(null, "Team C", "League C", "Country C");
+  private Team newTeam = new Team();
+
+  @BeforeEach
+  public void setUp() {
+    mockTeams.addAll(Arrays.asList(new Team(1L, TEAM_NAME_1, LEAGUE_NAME_1, COUNTRY_NAME_1),
+        new Team(2L, TEAM_NAME_2, LEAGUE_NAME_2, COUNTRY_NAME_2)));
+    newTeam.setNombre(TEAM_NAME_1);
+    newTeam.setLiga(LEAGUE_NAME_1);
+    newTeam.setPais(COUNTRY_NAME_1);
+  }
 
   @Test
-  public void testFindAllTeams() {
+  public void shouldFindAllTeams() {
     when(teamRepository.findAll()).thenReturn(mockTeams);
 
     List<Team> teamsResult = teamService.findAllTeams();
@@ -47,7 +54,7 @@ public class TeamServiceTest {
   }
 
   @Test
-  public void testFindById() {
+  public void shouldFindById() {
     when(teamRepository.findById(1L)).thenReturn(java.util.Optional.ofNullable(mockTeams.get(0)));
 
     Team teamsResult = teamService.findTeamById(1L);
@@ -58,7 +65,7 @@ public class TeamServiceTest {
   }
 
   @Test
-  public void testFindByNonExistingId() {
+  public void shouldNotFindId() {
     when(teamRepository.findById(3L)).thenReturn(Optional.empty());
 
     assertThrows(NotFoundException.class, () -> {
@@ -67,7 +74,7 @@ public class TeamServiceTest {
   }
 
   @Test
-  public void testFindByNameWithMultipleResults() {
+  public void shouldFindByNameWithMultipleResults() {
     when(teamRepository.findByNombreContaining("Team")).thenReturn(mockTeams);
 
     List<Team> teamsResult = teamService.findTeamByName("Team");
@@ -76,7 +83,7 @@ public class TeamServiceTest {
   }
 
   @Test
-  public void testFindByNameWithSingleResults() {
+  public void shouldFindByNameWithSingleResults() {
     when(teamRepository.findByNombreContaining("A")).thenReturn(Arrays.asList(mockTeams.get(0)));
 
     List<Team> teamsResult = teamService.findTeamByName("A");
@@ -88,7 +95,7 @@ public class TeamServiceTest {
   }
 
   @Test
-  public void testFindByNameWithNoResults() {
+  public void shouldNotFindByName() {
     when(teamRepository.findByNombreContaining("TextoAleatorio")).thenReturn(new ArrayList<>());
 
     assertThrows(NotFoundException.class, () -> {
@@ -97,7 +104,7 @@ public class TeamServiceTest {
   }
 
   @Test
-  public void testSaveTeam() {
+  public void shouldSaveTeam() {
     when(teamRepository.save(any(Team.class))).thenReturn(new Team(1L, "Team C", "League C", "Country C"));
 
     Team teamResult = teamService.saveTeam(newTeam);
@@ -109,7 +116,7 @@ public class TeamServiceTest {
   }
 
   @Test
-  public void testSaveWithEmptyTeam() {
+  public void shouldNotSaveWithEmptyTeam() {
     when(teamRepository.save(any(Team.class))).thenThrow(new IllegalArgumentException());
 
     assertThrows(InvalidRequestException.class, () -> {
@@ -118,7 +125,7 @@ public class TeamServiceTest {
   }
 
   @Test
-  public void testUpdateTeam() {
+  public void shouldUpdateTeam() {
     Team changeTeam = new Team(null, "Team D", "League D", "Country C");
     when(teamRepository.findById(1L)).thenReturn(Optional.ofNullable(newTeam));
     when(teamRepository.save(any(Team.class))).thenReturn(new Team(1L, "Team D", "League D", "Country C"));
@@ -131,7 +138,7 @@ public class TeamServiceTest {
   }
 
   @Test
-  public void testUpdateNonExistingTeam() {
+  public void shouldNotUpdateWithNoExistingTeam() {
     when(teamRepository.findById(1L)).thenReturn(Optional.empty());
     assertThrows(NotFoundException.class, () -> {
       teamService.updateTeam(1L, any(Team.class));
