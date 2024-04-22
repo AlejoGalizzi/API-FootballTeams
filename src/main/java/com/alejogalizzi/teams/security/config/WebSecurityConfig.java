@@ -2,12 +2,13 @@ package com.alejogalizzi.teams.security.config;
 
 import com.alejogalizzi.teams.security.jwt.JwtAuthenticationEntryPoint;
 import com.alejogalizzi.teams.security.jwt.JwtRequestFilter;
-import com.alejogalizzi.teams.security.jwt.JwtUserDetailsService;
+import com.alejogalizzi.teams.service.implementations.JwtUserDetailsService;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
+import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -20,6 +21,10 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @EnableWebSecurity
 @Configuration
+@SecurityScheme(
+    type = SecuritySchemeType.HTTP,
+    name = "basicAuth",
+    scheme = "basic")
 public class WebSecurityConfig {
 
   @Autowired
@@ -59,7 +64,9 @@ public class WebSecurityConfig {
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     http.csrf(csrf -> csrf.disable())
         .authorizeHttpRequests(requests ->
-            requests.requestMatchers("/auth/login", "/auth/register").permitAll()
+            requests.requestMatchers("/auth/login", "/auth/register",
+                    "/swagger-ui/**","/v3/api-docs/**",
+                    "/swagger-resources/*").permitAll()
             .requestMatchers("/equipos/**").authenticated())
         .httpBasic(basic -> basic.authenticationEntryPoint(authenticationEntryPoint()))
         .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
