@@ -29,17 +29,10 @@ public class TeamServiceTest extends BaseTestClass{
   @Autowired
   private ITeamService teamService;
 
-  private List<Team> mockTeams = new ArrayList<>();
-
-  private Team newTeam = new Team();
-
+  @Override
   @BeforeEach
   public void setUp() {
-    mockTeams.addAll(Arrays.asList(new Team(1L, TEAM_NAME_1, LEAGUE_NAME_1, COUNTRY_NAME_1),
-        new Team(2L, TEAM_NAME_2, LEAGUE_NAME_2, COUNTRY_NAME_2)));
-    newTeam.setNombre(TEAM_NAME_1);
-    newTeam.setLiga(LEAGUE_NAME_1);
-    newTeam.setPais(COUNTRY_NAME_1);
+    this.setUp();
   }
 
   @Test

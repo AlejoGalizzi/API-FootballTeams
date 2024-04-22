@@ -1,13 +1,22 @@
 package com.alejogalizzi.teams.unit;
 
+import com.alejogalizzi.teams.model.entity.Team;
+import com.alejogalizzi.teams.model.entity.User;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.json.JsonParseException;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.test.web.client.MockRestServiceServer;
 
@@ -40,9 +49,23 @@ public class BaseTestClass {
 
   protected static final String COUNTRY_NAME_2 = "Country B";
 
-  protected TestRestTemplate restTemplate = new TestRestTemplate();
+  protected final List<Team> mockTeams = new ArrayList<>();
 
-  protected MockRestServiceServer mockServer;
+  protected final Team newTeam = new Team();
+
+  protected final User newUser = new User();
+
+  protected void setUp() {
+    mockTeams.addAll(Arrays.asList(new Team(1L, TEAM_NAME_1, LEAGUE_NAME_1, COUNTRY_NAME_1),
+        new Team(2L, TEAM_NAME_2, LEAGUE_NAME_2, COUNTRY_NAME_2)));
+    newTeam.setNombre(TEAM_NAME_1);
+    newTeam.setLiga(LEAGUE_NAME_1);
+    newTeam.setPais(COUNTRY_NAME_1);
+    newUser.setUsername(USERNAME);
+    newUser.setPassword(PASSWORD);
+    newUser.setId(1L);
+  }
+
   protected HttpHeaders headers = new HttpHeaders();
 
   protected void createTokenHeader() {
@@ -52,6 +75,17 @@ public class BaseTestClass {
 
   protected String createURLWithPort(String uri) {
     return "http://localhost:8080" + uri;
+  }
+
+  protected String mapToJson(Object obj) throws JsonProcessingException {
+    ObjectMapper objectMapper = new ObjectMapper();
+    return objectMapper.writeValueAsString(obj);
+  }
+  protected <T> T mapFromJson(String json, Class<T> clazz)
+      throws JsonParseException, JsonMappingException, IOException {
+
+    ObjectMapper objectMapper = new ObjectMapper();
+    return objectMapper.readValue(json, clazz);
   }
 
   private String createTokenInHeader(Map<String, Object> claims) {
