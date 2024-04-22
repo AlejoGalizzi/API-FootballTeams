@@ -2,13 +2,10 @@ package com.alejogalizzi.teams.service.implementations;
 
 import com.alejogalizzi.teams.exception.AuthenticationException;
 import com.alejogalizzi.teams.model.entity.User;
-import com.alejogalizzi.teams.model.response.JwtResponse;
 import com.alejogalizzi.teams.repository.IUserRepository;
 import com.alejogalizzi.teams.security.jwt.JwtTokenUtil;
 import com.alejogalizzi.teams.service.IUserService;
-import com.alejogalizzi.teams.security.jwt.JwtUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;

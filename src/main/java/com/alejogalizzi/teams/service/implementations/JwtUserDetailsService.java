@@ -1,4 +1,4 @@
-package com.alejogalizzi.teams.security.jwt;
+package com.alejogalizzi.teams.service.implementations;
 
 import com.alejogalizzi.teams.exception.NotFoundException;
 import com.alejogalizzi.teams.model.entity.User;

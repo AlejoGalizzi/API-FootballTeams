@@ -1,6 +1,6 @@
 package com.alejogalizzi.teams.security.jwt;
 
-import com.alejogalizzi.teams.exception.InvalidRequestException;
+import com.alejogalizzi.teams.service.implementations.JwtUserDetailsService;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
