@@ -25,6 +25,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/equipos")
 @SecurityRequirement(name = "basicAuth")
 @Tag(name = "Equipos", description = "API para gestionar equipos de fútbol")
+@ApiResponses(value = {
+    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "Acceso denegado",
+        content = @io.swagger.v3.oas.annotations.media.Content(schema = @io.swagger.v3.oas.annotations.media.Schema(implementation = ErrorResponse.class)))
+})
 public class TeamController {
 
   @Autowired
@@ -32,6 +36,9 @@ public class TeamController {
 
   @Operation(summary = "Consulta de Todos los Equipos")
   @GetMapping(produces = "application/json")
+  @ApiResponses(value = {
+      @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Equipos encontrados")
+  })
   public ResponseEntity<List<Team>> getTeams() {
     return ResponseEntity.ok(equipoService.findAllTeams());
   }
