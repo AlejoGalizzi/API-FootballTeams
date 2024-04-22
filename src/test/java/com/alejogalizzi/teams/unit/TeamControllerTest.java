@@ -13,13 +13,10 @@ import com.alejogalizzi.teams.controller.TeamController;
 import com.alejogalizzi.teams.exception.InvalidRequestException;
 import com.alejogalizzi.teams.exception.NotFoundException;
 import com.alejogalizzi.teams.model.entity.Team;
-import com.alejogalizzi.teams.model.entity.User;
 import com.alejogalizzi.teams.security.jwt.JwtTokenUtil;
 import com.alejogalizzi.teams.service.implementations.JwtUserDetailsService;
 import com.alejogalizzi.teams.service.implementations.TeamService;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -51,7 +48,7 @@ public class TeamControllerTest extends BaseTestClass {
   @Override
   @BeforeEach
   public void setUp() {
-    this.setUp();
+    super.setUp();
     createTokenHeader();
   }
 

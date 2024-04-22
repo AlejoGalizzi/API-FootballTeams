@@ -32,7 +32,7 @@ public class TeamServiceTest extends BaseTestClass{
   @Override
   @BeforeEach
   public void setUp() {
-    this.setUp();
+    super.setUp();
   }
 
   @Test
