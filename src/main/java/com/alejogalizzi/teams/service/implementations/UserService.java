@@ -29,10 +29,13 @@ public class UserService implements IUserService {
   @Autowired
   private JwtUserDetailsService userDetailsService;
 
+  private final BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+
   @Override
   public String login(User user) {
-    if(userRepository.findByUsername(user.getUsername()) == null) {
-      throw new AuthenticationException("No existe un usuario con ese nombre de usuario");
+    User userDB = userRepository.findByUsername(user.getUsername());
+    if(userDB == null || !bCryptPasswordEncoder.matches(user.getPassword(), userDB.getPassword())) {
+      throw new AuthenticationException("Usuario o contraseña invalidos");
     }
     final UserDetails userDetails = userDetailsService.loadUserByUsername(user.getUsername());
     return jwtTokenUtil.generateToken(userDetails);
@@ -45,7 +48,7 @@ public class UserService implements IUserService {
     }
     User dbUser = new User();
     dbUser.setUsername(user.getUsername());
-    dbUser.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
+    dbUser.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
     userRepository.save(dbUser);
     authenticate(dbUser.getUsername(), dbUser.getPassword());
     final UserDetails userDetails = userDetailsService.loadUserByUsername(dbUser.getUsername());
